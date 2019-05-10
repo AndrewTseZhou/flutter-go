@@ -1,15 +1,16 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:flutter_go/components/list_view_item.dart';
 import 'package:flutter_go/components/list_refresh.dart' as listComp;
 import 'package:flutter_go/components/pagination.dart';
 import 'package:flutter_go/views/first_page/first_page_item.dart';
 import 'package:flutter_go/components/disclaimer_msg.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_go/utils/net_utils.dart';
 
-GlobalKey<DisclaimerMsgState> key;
+// ValueKey<String> key;
 
 class FirstPage extends StatefulWidget {
   @override
@@ -19,6 +20,7 @@ class FirstPage extends StatefulWidget {
 class FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixin{
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   Future<bool> _unKnow;
+  GlobalKey<DisclaimerMsgState> key;
 
   @override
   bool get wantKeepAlive => true;
@@ -29,14 +31,13 @@ class FirstPageState extends State<FirstPage> with AutomaticKeepAliveClientMixin
     super.initState();
     if (key == null) {
        key = GlobalKey<DisclaimerMsgState>();
+       // key = const Key('__RIKEY1__');
       //获取sharePre
        _unKnow = _prefs.then((SharedPreferences prefs) {
          return (prefs.getBool('disclaimer::Boolean') ?? false);
        });
 
-      /**
-       * 判断是否需要弹出免责声明,已经勾选过不在显示,就不会主动弹
-       */
+      /// 判断是否需要弹出免责声明,已经勾选过不在显示,就不会主动弹
       _unKnow.then((bool value) {
          new Future.delayed(const Duration(seconds: 1),(){
            if (!value) {
